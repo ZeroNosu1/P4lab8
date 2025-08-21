@@ -1,33 +1,46 @@
-// prisma/seed.ts
-import { PrismaClient } from "@prisma/client";
-const prisma = new PrismaClient();
-
-async function seedProduct() {
-    await prisma.product.createMany({
-        data: [
-            {
-                name: "Notebook",
-                description: "14 inch, Intel i5",
-                price: 23900,
-            },
-            {
-                name: "Wireless Mouse",
-                description: "Ergonomic design",
-                price: 590,
-            },
-        ],
-    });
-}
+import { PrismaClient } from '@prisma/client'
+const prisma = new PrismaClient()
 
 async function main() {
-    await seedProduct();
-    console.log(" Seeded data successfully!");
+  // เพิ่มหมวดหมู่
+  const electronics = await prisma.category.upsert({
+    where: { name: 'Electronics' },
+    update: {},
+    create: { name: 'Electronics' },
+  })
+
+  const accessories = await prisma.category.upsert({
+    where: { name: 'Accessories' },
+    update: {},
+    create: { name: 'Accessories' },
+  })
+
+  // เพิ่มสินค้า (ใช้ connect)
+  await prisma.product.createMany({
+    data: [
+      {
+        name: 'eee',
+        description: '14 inch, Intel i5',
+        price: 23900,
+        categoryId: electronics.id,
+      },
+      {
+        name: 'Wbbbb',
+        description: 'Ergonomic design',
+        price: 590,
+        categoryId: accessories.id,
+      },
+      {
+        name: 'Hdddd',
+        description: 'Noise Cancelling, Bluetooth 5.0',
+        price: 1990,
+        categoryId: accessories.id,
+      },
+    ],
+    skipDuplicates: true,
+  })
 }
+
 main()
-    .catch((e) => {
-        console.error(e);
-        process.exit(1);
-    })
-    .finally(async () => {
-        await prisma.$disconnect();
-    })
+  .catch(console.error)
+  .finally(() => prisma.$disconnect())
