@@ -19,19 +19,19 @@ async function main() {
   await prisma.product.createMany({
     data: [
       {
-        name: 'eee',
+        name: '1',
         description: '14 inch, Intel i5',
         price: 23900,
         categoryId: electronics.id,
       },
       {
-        name: 'Wbbbb',
+        name: '2',
         description: 'Ergonomic design',
         price: 590,
         categoryId: accessories.id,
       },
       {
-        name: 'Hdddd',
+        name: '3',
         description: 'Noise Cancelling, Bluetooth 5.0',
         price: 1990,
         categoryId: accessories.id,
